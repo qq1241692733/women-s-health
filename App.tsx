@@ -194,12 +194,12 @@ const App: React.FC = () => {
                         <h2 className="text-lg font-bold text-gray-800">临床案例参考</h2>
                      </div>
                      
-                     <SensitiveVideoPlayer 
-                        title="检查手法示范" 
-                        description="识别异常组织的操作指南（包含真实医疗影像）"
-                        // In a real scenario, this would be a hosted URL.
-                        src="" 
-                     />
+                    <SensitiveVideoPlayer 
+                      title="真实医疗影像" 
+                      description=""
+                      // 本地示例路径：请将你的视频文件命名为 `clinical_case.mp4` 并放到 `public/videos` 下
+                      src="/videos/clinical_case.mp4" 
+                    />
                      <p className="text-xs text-gray-400 mt-3 text-center px-4">
                         * 视频仅供医疗科普教育使用，请勿用于非医疗目的传播。
                      </p>
