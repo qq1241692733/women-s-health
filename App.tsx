@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { SensitiveVideoPlayer } from './components/SensitiveVideoPlayer';
-import { getHealthAdvice } from './services/geminiService';
 
 const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'home' | 'guide' | 'resources'>('home');
-  const [aiQuestion, setAiQuestion] = useState('');
-  const [aiResponse, setAiResponse] = useState<string | null>(null);
-  const [isLoadingAi, setIsLoadingAi] = useState(false);
+  const [activeTab, setActiveTab] = useState<'home' | 'resources'>('home');
 
   // External article data
   const weChatArticle = {
@@ -16,13 +12,7 @@ const App: React.FC = () => {
     image: "https://picsum.photos/400/250?grayscale"
   };
 
-  const handleAskAi = async () => {
-    if (!aiQuestion.trim()) return;
-    setIsLoadingAi(true);
-    const response = await getHealthAdvice(aiQuestion);
-    setAiResponse(response);
-    setIsLoadingAi(false);
-  };
+  // AI assistant removed; no handler needed
 
   return (
     <div className="min-h-screen bg-stone-50 text-gray-800 font-sans pb-24">
@@ -36,7 +26,6 @@ const App: React.FC = () => {
           </div>
           <h1 className="font-bold text-lg text-gray-800">
             {activeTab === 'home' && '女性健康手册'}
-            {activeTab === 'guide' && '文胸选择指南'}
             {activeTab === 'resources' && '健康资源库'}
           </h1>
         </div>
@@ -85,56 +74,16 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            {/* AI Assistant Card */}
-            <div className="bg-white rounded-2xl shadow-sm border border-indigo-50 overflow-hidden">
-               <div className="bg-indigo-50/50 p-5 border-b border-indigo-50 flex justify-between items-center">
-                  <div>
-                    <h3 className="font-bold text-indigo-900 flex items-center gap-2">
-                      <span>👩‍⚕️</span> 智能健康助理
-                    </h3>
-                    <p className="text-indigo-600/80 text-xs mt-1">有问题？随时问我</p>
-                  </div>
-               </div>
-               <div className="p-5">
-                  <div className="relative">
-                      <input 
-                          type="text" 
-                          className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-4 pr-12 py-3 text-sm focus:ring-2 focus:ring-pink-300 focus:border-pink-300 outline-none transition-all"
-                          placeholder="例如：乳房胀痛正常吗？"
-                          value={aiQuestion}
-                          onChange={(e) => setAiQuestion(e.target.value)}
-                      />
-                      <button 
-                          onClick={handleAskAi}
-                          disabled={isLoadingAi}
-                          className="absolute right-2 top-2 bottom-2 bg-indigo-600 text-white px-3 rounded-lg text-xs font-bold shadow-md hover:bg-indigo-700 disabled:opacity-50 transition-colors"
-                      >
-                          {isLoadingAi ? '...' : '提问'}
-                      </button>
-                  </div>
-                  {aiResponse && (
-                      <div className="mt-4 bg-indigo-50/30 p-4 rounded-xl text-gray-700 text-sm leading-relaxed border border-indigo-100">
-                          <p className="font-bold text-indigo-900 mb-1 text-xs">回答：</p>
-                          {aiResponse}
-                      </div>
-                  )}
-               </div>
+            {/* 指南（已整合到首页） */}
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+               <h3 className="text-xl font-bold text-gray-800 mb-2">为什么文胸很重要？</h3>
+               <p className="text-gray-600 leading-relaxed text-sm">
+                 合适的文胸不仅是为了美观，更是为了淋巴系统的健康。
+                 过紧的钢圈会压迫乳腺导管，阻碍淋巴回流，长期可能引发增生等问题。
+               </p>
             </div>
-          </div>
-        )}
 
-        {/* === GUIDE TAB === */}
-        {activeTab === 'guide' && (
-          <div className="animate-fade-in space-y-6">
-             <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                <h3 className="text-xl font-bold text-gray-800 mb-2">为什么文胸很重要？</h3>
-                <p className="text-gray-600 leading-relaxed text-sm">
-                  合适的文胸不仅是为了美观，更是为了淋巴系统的健康。
-                  过紧的钢圈会压迫乳腺导管，阻碍淋巴回流，长期可能引发增生等问题。
-                </p>
-             </div>
-
-             <div className="space-y-4">
+            <div className="space-y-4">
                <h3 className="font-bold text-gray-800 ml-1">自测三部曲</h3>
                {[
                  { num: 1, title: "底围要平", desc: "背后的带子应该和地面平行，不应该往上跑。" },
@@ -151,14 +100,16 @@ const App: React.FC = () => {
                    </div>
                  </div>
                ))}
-             </div>
+            </div>
 
-             <div className="bg-pink-50 p-5 rounded-2xl text-center">
+            <div className="bg-pink-50 p-5 rounded-2xl text-center">
                <p className="text-pink-800 font-bold mb-1">💡 温馨提示</p>
                <p className="text-pink-700 text-sm">身体会随年龄和体重变化，建议每6个月重新测量一次尺码。</p>
-             </div>
+            </div>
           </div>
         )}
+
+        {/* GUIDE tab removed — content merged into HOME */}
 
         {/* === RESOURCES TAB === */}
         {activeTab === 'resources' && (
@@ -222,15 +173,7 @@ const App: React.FC = () => {
             <span className="text-xs font-medium">首页</span>
           </button>
           
-          <button 
-            onClick={() => setActiveTab('guide')}
-            className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${activeTab === 'guide' ? 'text-pink-600' : 'text-gray-400'}`}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            <span className="text-xs font-medium">指南</span>
-          </button>
+          {/* guide tab removed */}
 
           <button 
             onClick={() => setActiveTab('resources')}
